@@ -1,0 +1,1 @@
+SELECT * FROM new_1.ev_article_cate;
