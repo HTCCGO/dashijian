@@ -28,16 +28,23 @@ app.use((req, res, next) => {
     }
     next()
 })
+
 app.use((err, req, res, next) => {
   //  if(err instanceof expressJoi.ValidationError) return res.cc(err)
     //验证失败的错误时
     if (err.name === 'unauthorizeError') return res.cc('身份认证失败')
 })
+
 //调用用户路由模块
 const userRouter = require('./router/user.js')
 const userinfoRouter=require('./router/userinfo.js')
+const artcateRouter=require('./router/artcate.js')
+const articleRouter=require('./router/airticle.js')
+
+app.use('/my/article',articleRouter)
 app.use('/api', userRouter)
 app.use('/my',userinfoRouter)
+app.use('/my/article',artcateRouter)
 
 //启动web服务器
 app.listen(3007, () => {

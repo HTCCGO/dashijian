@@ -5,6 +5,8 @@
 //导入path模块，以保证能够使用db模块
 const path = require('path')
 const main = 'C:/Users/HP/Desktop/dashijian'
+//导入bcryptjs模块，以保证能对其中的模块进行加密
+const bcryptjs = require('bcryptjs')
 
 //导人db中的index.js
 const db = require(path.join(main, 'db/index.js'))
@@ -40,14 +42,35 @@ exports.upDataUser = (req, res) => {
 
 exports.upDataPassword = (req, res) => {
       const mysqlStr='select * from ev_user where id=?'
-      ///在进行初始化的时候user。id已经被挂载完成
+      ///在进行初始化的时候user.id已经被挂载完成,在有token的情况下，不会出现错误
       db.query(mysqlStr,req.user.id,(err,results)=>{
         if(err) return res.cc(err)
         if(results.length!==1) return res.cc('用户不存在')
-        
+      })
+      //对新密码进行加密，并利用mysql来进行数据更新
+      const compareRpms=bcryptjs.compareSync(req.body.oldpwd,10)
+      if(!compareRpms)return res.cc('原密码错误')
+      const newpwd=bcryptjs.hashSync(req.body.newpwd,10)
+      const newMysqlStr='update ev_user set password=? where id=?'
+      db.query(newMysqlStr,[newpwd,req.body.id],(err,results)=>{
+        if(err) return res.cc(err)
+        //修改注册表信息时出现错误，受影响的行数不等于1
+        if(results.affectedRows !==1) return res.cc('修改密码时出现错误')
+        res.send({
+          status:0,
+          message:'密码修改完成'
+        })
       })
 }
 
 exports.upDataAvatar=(req,res)=>{
-
+        const mysqlStr='update ev_user set user_pic =? where id=?'
+        db.body(mysqlStr,[req.body.avatar,req.user.id],(err,results)=>{
+          if(err)return res.cc(err)
+          if(results.affectedRows !==1) return res.cc('更新头像失败')
+        })
+        res.send({
+          status:0,
+          message:'更换头像完成'
+        })
 }
