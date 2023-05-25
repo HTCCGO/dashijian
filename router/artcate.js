@@ -6,6 +6,7 @@ const {
     get_cates_Byid_schema,
     updata_cate_Byid_schema,
 }=require('../schema/articate.js')
+
 //创建路由对象
 const router=express.Router()
 const router_Handler=require('../router_handler/articate.js')

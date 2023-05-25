@@ -4,15 +4,12 @@ const express = require('express')
 const expressJoi=require('@escook/express-joi')
 //导入需要的验证规则对象
 const {up_data_user_schema,up_data_pwd_schema,updata_avatar_schema}=require('../schema/user.js')
-const db=require('../db/index.js')
 
 //创建路由对象
-const path=require('path')
 const router = express.Router()
-const main='C:/Users/HP/Desktop/dashijian'
 
 //导入用户处理函数模块
-const userinfoHandler=require(path.join(main,'/router_handler/userinfo.js'))
+const userinfoHandler=require('../router_handler/userinfo.js')
 
 //获取用户的基本信息
 router.get('/userinfo',userinfoHandler.getUserInfo)

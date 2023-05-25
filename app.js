@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: false }))
 
 //全局中间件，函数的封装
 app.use((req, res, next) => {
-    //设置status的值为错误（默认），以方便在这之后调用这个函数
+    //设置status的值为错误（默认），方便在这之后调用这个函数
     res.cc = (err, status = 1) => {
         res.send({
             status,
